@@ -2,24 +2,42 @@
 
 For Intel J1900 / x86_64 EFI router-server.
 
-Includes LuCI Chinese, Docker, Dockerman, HomeProxy, Xray, Sing-box, DDNS, ttyd, and optional Docker auto-start templates for 3X-UI and SSR server.
+## Included
+
+- ImmortalWrt x86_64 EFI image build by GitHub Actions
+- LuCI Chinese UI
+- Docker / Dockerd / Docker Compose / Dockerman
+- HomeProxy / Xray / Sing-box
+- DDNS base + Cloudflare support
+- ChangeIP DDNS custom updater
+- ttyd web terminal
+- Auto-expand root filesystem on first boot
+- Auto-start services
+- Docker Compose template for:
+  - 3X-UI
+  - SSR server backup container
+  - optional Hysteria2 container placeholder
 
 ## Build
 
 1. Open this repository on GitHub.
 2. Go to **Actions**.
-3. Choose **Build ImmortalWrt J1900**.
+3. Choose **Build ImmortalWrt J1900 Ultimate**.
 4. Click **Run workflow**.
-5. Use default version `25.12.1` and root size `16G`.
-6. After build, download artifact `immortalwrt-j1900-firmware`.
-7. Flash the `.img.gz` to SSD.
-
-## Default LAN
-
-Default LAN IP is kept as `192.168.1.1` unless you change it after flashing.
+5. Keep default version unless you know what you are doing.
+6. Wait until it finishes.
+7. Download artifact: `immortalwrt-j1900-ultimate-firmware`.
+8. Flash the `.img.gz` to SSD using Rufus / balenaEtcher.
 
 ## After flashing
 
-Set PPPoE in LuCI, then configure DDNS and 3X-UI.
+Default LAN IP is `192.168.1.1`.
 
-Docker templates are placed in `/root/docker-compose.yml`.
+Then configure:
+
+1. PPPoE WAN
+2. DDNS
+3. Docker / 3X-UI
+4. Port forwarding if needed
+
+See `POST_FLASH_STEPS.md`.

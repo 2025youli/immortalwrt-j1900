@@ -1,0 +1,7 @@
+{
+  "target": "x86/64",
+  "profile": "generic",
+  "version": "25.12.1",
+  "rootfs_mb": 16384,
+  "description": "ImmortalWrt J1900 Ultimate - x86_64 EFI with Docker, HomeProxy, DDNS, 3X-UI template and SSR server template"
+}
