@@ -1,0 +1,48 @@
+# Base web UI + Chinese
+luci
+luci-ssl
+luci-i18n-base-zh-cn
+luci-i18n-firewall-zh-cn
+luci-i18n-package-manager-zh-cn
+luci-i18n-ttyd-zh-cn
+
+# Router basics
+curl
+wget-ssl
+ca-bundle
+ca-certificates
+bash
+nano
+htop
+jq
+coreutils
+coreutils-nohup
+
+# DDNS basic support
+luci-app-ddns
+ddns-scripts
+curl
+
+# Proxy / server components
+xray-core
+sing-box
+luci-app-homeproxy
+
+# Docker + web management
+docker
+dockerd
+docker-compose
+luci-app-dockerman
+
+# Terminal from web
+ttyd
+luci-app-ttyd
+
+# Tools useful for x86 disk/server
+block-mount
+e2fsprogs
+parted
+kmod-tun
+kmod-nft-tproxy
+kmod-inet-diag
+kmod-netlink-diag
