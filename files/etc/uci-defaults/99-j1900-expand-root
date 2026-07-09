@@ -1,0 +1,52 @@
+#!/bin/sh
+# Auto expand x86 root partition on first boot.
+# Safe for generic ext4 combined EFI images written to larger SSD.
+
+LOG="/root/firstboot-expand.log"
+exec >> "$LOG" 2>&1
+
+echo "[expand-root] start $(date)"
+
+ROOT_DEV="$(findmnt -n -o SOURCE / 2>/dev/null)"
+echo "ROOT_DEV=$ROOT_DEV"
+
+case "$ROOT_DEV" in
+  /dev/sd[a-z][0-9]*)
+    DISK="$(echo "$ROOT_DEV" | sed 's/[0-9]*$//')"
+    PART="$(echo "$ROOT_DEV" | sed "s#$DISK##")"
+    ;;
+  /dev/nvme*n*p[0-9]*)
+    DISK="$(echo "$ROOT_DEV" | sed 's/p[0-9]*$//')"
+    PART="$(echo "$ROOT_DEV" | sed "s#${DISK}p##")"
+    ;;
+  *)
+    echo "Unsupported ROOT_DEV: $ROOT_DEV"
+    exit 0
+    ;;
+esac
+
+echo "DISK=$DISK PART=$PART"
+
+if command -v sgdisk >/dev/null 2>&1; then
+  sgdisk -e "$DISK" || true
+fi
+
+if command -v parted >/dev/null 2>&1; then
+  parted -s "$DISK" resizepart "$PART" 100% || true
+fi
+
+partprobe "$DISK" || true
+sleep 3
+
+resize2fs "$ROOT_DEV" || true
+
+/etc/init.d/dockerd enable 2>/dev/null || true
+/etc/init.d/uhttpd enable 2>/dev/null || true
+/etc/init.d/ttyd enable 2>/dev/null || true
+/etc/init.d/cron enable 2>/dev/null || true
+/etc/init.d/firewall enable 2>/dev/null || true
+/etc/init.d/network enable 2>/dev/null || true
+/etc/init.d/dnsmasq enable 2>/dev/null || true
+
+echo "[expand-root] done $(date)"
+exit 0

@@ -1,0 +1,19 @@
+#!/bin/sh /etc/rc.common
+START=99
+STOP=10
+
+start() {
+  mkdir -p /opt/docker /opt/3x-ui/db /opt/3x-ui/cert /opt/hysteria
+  /etc/init.d/dockerd enable 2>/dev/null || true
+  /etc/init.d/dockerd start 2>/dev/null || true
+  sleep 8
+  if command -v docker >/dev/null 2>&1; then
+    cd /root
+    docker compose -f /root/docker-compose.yml up -d x-ui 2>/tmp/j1900-compose.log || true
+  fi
+}
+
+stop() {
+  cd /root
+  docker compose -f /root/docker-compose.yml down 2>/dev/null || true
+}

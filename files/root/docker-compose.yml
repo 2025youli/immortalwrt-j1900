@@ -1,0 +1,38 @@
+services:
+  x-ui:
+    image: ghcr.io/mhsanaei/3x-ui:latest
+    container_name: 3x-ui
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /opt/3x-ui/db:/etc/x-ui
+      - /opt/3x-ui/cert:/root/cert
+    environment:
+      XRAY_VMESS_AEAD_FORCED: "false"
+
+  ssr-server:
+    image: teddysun/shadowsocks-r:latest
+    container_name: ssr-server
+    restart: unless-stopped
+    ports:
+      - "8388:8388/tcp"
+      - "8388:8388/udp"
+    environment:
+      SERVER_PORT: "8388"
+      PASSWORD: "ChangeThisPasswordNow"
+      METHOD: "aes-256-cfb"
+      PROTOCOL: "auth_aes128_md5"
+      OBFS: "tls1.2_ticket_auth"
+    profiles:
+      - backup
+
+  hysteria2:
+    image: tobyxdd/hysteria:latest
+    container_name: hysteria2
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /opt/hysteria:/etc/hysteria
+    command: ["server", "-c", "/etc/hysteria/config.yaml"]
+    profiles:
+      - hy2
